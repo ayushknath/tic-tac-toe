@@ -1,9 +1,11 @@
 // Tic Tac Toe
 #include <iostream>
 #include <cstdlib>
+#include <vector>
 using namespace std;
 
-#define N 3;
+#define N 3
+#define TOTAL_SQUARES 9
 
 void greet();
 
@@ -29,30 +31,35 @@ int main() {
     {{0, 0}, {1, 1}, {2, 2}},
     {{0, 2}, {1, 1}, {2, 0}}
   };
+  int remainingZeroes;
   
   greet();
 
-  while(countX != 3 && countO != 3) {
+  while(countX != 3 && countO != 3 && gameCount < 5) {
     // Human
-    cout << "Enter coordinates: ";
-    cin >> row >> col;
-    if(board[row][col] == 0)
-      board[row][col] = 1;
-    else {
-      cout << "This box is already filled!\n";
-      continue;
-    }
+    do {
+      cout << "Enter coordinates: ";
+      cin >> row >> col;
+    } while(board[row][col] != 0);
+    board[row][col] = 1;
+    gameCount++;
 
+    // Check remaining zeroes
+    remainingZeroes = TOTAL_SQUARES - (gameCount * 2);
+    
     // Computer
-    npcRow = rand() % N;
-    npcCol = rand() % N;
-    while(board[npcRow][npcCol] != 0) {
+    if(remainingZeroes > 0) {
       npcRow = rand() % N;
       npcCol = rand() % N;
+      while(board[npcRow][npcCol] != 0) {
+        npcRow = rand() % N;
+        npcCol = rand() % N;
+      }
+      board[npcRow][npcCol] = 2;
+      cout << "Computer chose: " << npcRow << " " << npcCol << "\n";
     }
-    board[npcRow][npcCol] = 2;
-    cout << "Computer chose: " << npcRow << " " << npcCol << "\n";
 
+    // Display board
     for(int i = 0; i < 3; i++) {
       for(int j = 0; j < 3; j++) {
         if(board[i][j] == 1)
@@ -64,8 +71,7 @@ int main() {
       }
       cout << "\n";
     }
-    
-    gameCount++;
+
     if(gameCount >= 3) {
       for(int i = 0; i < 8; i++) {
         for(int j = 0; j < 3; j++) {
@@ -86,9 +92,11 @@ int main() {
   }
 
   if(countX == 3)
-    cout << "\nCongratulations!! You won 😎🎉\n";
+    cout << "Congrats! You won 🎉\n";
+  else if(countO == 3)
+    cout << "Computer won\n";
   else
-    cout << "\nComputer won 😏\n";
+    cout << "It's a tie! 😲\n";
 
   return 0;
 }
