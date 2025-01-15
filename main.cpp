@@ -1,6 +1,25 @@
 #include <iostream>
 #include <cstdio>
+#include <vector>
 using namespace std;
+
+struct Move {
+    char player;
+    vector<int> cells;
+};
+
+vector<int> cellMapper(int cellNumber) {
+    int cellMap[9][2] = {
+        {0,0}, {0,1}, {0,2},
+        {1,0}, {1,1}, {1,2},
+        {2,0}, {2,1}, {2,2}
+    };
+    vector<int> mappedCoords = {
+        *cellMap[cellNumber-1],
+        *(cellMap[cellNumber-1] + 1)
+    };
+    return mappedCoords;
+}
 
 bool checkWinner(char board[3][3], char* winner) {
     int winCoords[8][3][2] = {
@@ -22,14 +41,14 @@ bool checkWinner(char board[3][3], char* winner) {
     return false; 
 }
 
-bool updateBoard(char board[3][3], bool isXNext, int coords[2]) {
-    if (board[coords[0]][coords[1]]) {
+bool updateBoard(char board[3][3], bool isXNext, vector<int> coords) {
+    if (board[coords.at(0)][coords.at(1)]) {
         cout << "This cell is already filled!\n";
         return false;
     }
     (isXNext) ?
-        board[coords[0]][coords[1]] = 'X' :
-        board[coords[0]][coords[1]] = 'O';
+        board[coords.at(0)][coords.at(1)] = 'X' :
+        board[coords.at(0)][coords.at(1)] = 'O';
 
     return true;
 }
@@ -40,6 +59,26 @@ void printBoard(char board[3][3]) {
     printf(" %c | %c | %c \n", board[1][0] ? board[1][0] : ' ', board[1][1] ? board[1][1] : ' ', board[1][2] ? board[1][2] : ' ');
     printf("---|---|---\n");
     printf(" %c | %c | %c \n\n", board[2][0] ? board[2][0] : ' ', board[2][1] ? board[2][1] : ' ', board[2][2] ? board[2][2] : ' ');
+}
+
+void printStatistics(vector<Move> moves) {
+    printf("\nPlayer | %-30s\n", "Moves");
+    for (int i = 1; i<= 39; i++) {
+        printf("=");
+    }
+    printf("\n%-6c | ", moves.at(0).player);
+    for (int m : moves.at(0).cells) {
+        printf(" %d ", m);
+    }
+    printf("\n");
+    for (int i = 1; i <= 39; i++) {
+        printf("-");
+    }
+    printf("\n%-6c | ", moves.at(1).player);
+    for (int m : moves.at(1).cells) {
+        printf(" %d ", m);
+    }
+    printf("\n");
 }
 
 bool allSquaresFilled(char board[3][3]) {
@@ -66,74 +105,55 @@ int main() {
     bool isStart = true;
     char winner = '\0';
     int cellNumber;
-    int coords[2];
     char board[3][3] = {
         {'\0', '\0', '\0'},
         {'\0', '\0', '\0'},
         {'\0', '\0', '\0'}
     };
 
+    vector<Move> moveTracker = {
+        {'X', {}},
+        {'O', {}}
+    };
+
     while (!checkWinner(board, &winner) && !allSquaresFilled(board)) {
         bool updateStatus = false;
+        vector<int> coords;
+
         if (!isStart) {
             printBoard(board);
         } else {
             isStart = false;
         }
+
         isXNext ? cout << "X's turn (enter cell number): " : cout << "O's turn (enter cell number): ";
         cin >> cellNumber;
-        switch (cellNumber) {
-            case 1:
-                coords[0] = 0;
-                coords[1] = 0;
-                break;
-            case 2:
-                coords[0] = 0;
-                coords[1] = 1;
-                break;
-            case 3:
-                coords[0] = 0;
-                coords[1] = 2;
-                break;
-            case 4:
-                coords[0] = 1;
-                coords[1] = 0;
-                break;
-            case 5:
-                coords[0] = 1;
-                coords[1] = 1;
-                break;
-            case 6:
-                coords[0] = 1;
-                coords[1] = 2;
-                break;
-            case 7:
-                coords[0] = 2;
-                coords[1] = 0;
-                break;
-            case 8:
-                coords[0] = 2;
-                coords[1] = 1;
-                break;
-            case 9:
-                coords[0] = 2;
-                coords[1] = 2;
-                break;
-            default:
-                cout << "Invalid cell number! Please try again\n";
-                continue;
+
+        if (cellNumber > 9 || cellNumber < 1) {
+            cout << "Invalid cell number! Please try again\n";
+            continue;
         }
+
+        coords = cellMapper(cellNumber);
 
         updateStatus = updateBoard(board, isXNext, coords);
         
         if (updateStatus) {
-             isXNext ? isXNext = false : isXNext = true;
+            if (isXNext) {
+                moveTracker.at(0).cells.push_back(cellNumber);
+                isXNext = false;
+            } else {
+                moveTracker.at(1).cells.push_back(cellNumber);
+                isXNext = true;
+            }
         }
     }
 
     printBoard(board);
 
     winner ? printf("Winner: %c\n", winner) : printf("It's a draw\n");
+
+    printStatistics(moveTracker);
 
     return 0;
 }
