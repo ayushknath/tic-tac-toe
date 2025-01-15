@@ -24,7 +24,7 @@ bool checkWinner(char board[3][3], char* winner) {
 
 bool updateBoard(char board[3][3], bool isXNext, int* coords) {
     if (board[coords[0]][coords[1]]) {
-        cout << "This square is already filled!\n";
+        cout << "This cell is already filled!\n";
         return false;
     }
     (isXNext) ?
@@ -65,7 +65,7 @@ int main() {
     bool isXNext = true;
     bool isStart = true;
     char winner = '\0';
-    int squareNumber;
+    int cellNumber;
     int coords[2];
     char board[3][3] = {
         {'\0', '\0', '\0'},
@@ -80,9 +80,9 @@ int main() {
         } else {
             isStart = false;
         }
-        isXNext ? cout << "X's turn (enter square number): " : cout << "O's turn (enter square number): ";
-        cin >> squareNumber;
-        switch (squareNumber) {
+        isXNext ? cout << "X's turn (enter cell number): " : cout << "O's turn (enter cell number): ";
+        cin >> cellNumber;
+        switch (cellNumber) {
             case 1:
             	coords[0] = 0;
             	coords[1] = 0;
@@ -129,7 +129,7 @@ int main() {
                 updateStatus = updateBoard(board, isXNext, coords);
                 break;
             default:
-                cout << "Invalid square number! Please try again\n";
+                cout << "Invalid cell number! Please try again\n";
         }
         
         if (updateStatus) {
