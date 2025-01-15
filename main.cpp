@@ -22,7 +22,7 @@ bool checkWinner(char board[3][3], char* winner) {
     return false; 
 }
 
-bool updateBoard(char board[3][3], bool isXNext, int* coords) {
+bool updateBoard(char board[3][3], bool isXNext, int coords[2]) {
     if (board[coords[0]][coords[1]]) {
         cout << "This cell is already filled!\n";
         return false;
@@ -84,53 +84,47 @@ int main() {
         cin >> cellNumber;
         switch (cellNumber) {
             case 1:
-            	coords[0] = 0;
-            	coords[1] = 0;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[0] = 0;
+                coords[1] = 0;
                 break;
             case 2:
                 coords[0] = 0;
                 coords[1] = 1;
-          	updateStatus = updateBoard(board, isXNext, coords);
                 break;
             case 3:
                 coords[0] = 0;
-            	coords[1] = 2;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[1] = 2;
                 break;
             case 4:
                 coords[0] = 1;
-            	coords[1] = 0;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[1] = 0;
                 break;
             case 5:
-        	coords[0] = 1;
-            	coords[1] = 1;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[0] = 1;
+                coords[1] = 1;
                 break;
             case 6:
-	        coords[0] = 1;
-            	coords[1] = 2;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[0] = 1;
+                coords[1] = 2;
                 break;
             case 7:
-		coords[0] = 2;
-            	coords[1] = 0;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[0] = 2;
+                coords[1] = 0;
                 break;
             case 8:
-        	coords[0] = 2;
-            	coords[1] = 1;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[0] = 2;
+                coords[1] = 1;
                 break;
             case 9:
-	        coords[0] = 2;
-            	coords[1] = 2;
-                updateStatus = updateBoard(board, isXNext, coords);
+                coords[0] = 2;
+                coords[1] = 2;
                 break;
             default:
                 cout << "Invalid cell number! Please try again\n";
+                continue;
         }
+
+        updateStatus = updateBoard(board, isXNext, coords);
         
         if (updateStatus) {
              isXNext ? isXNext = false : isXNext = true;
