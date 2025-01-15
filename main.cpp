@@ -34,23 +34,12 @@ bool updateBoard(char board[3][3], bool isXNext, int* coords) {
     return true;
 }
 
-void printBoard(char board[3][3], bool* isStart) {
-    if (*isStart) {
-        cout << " 1 | 2 | 3 \n";
-        cout << "---|---|---\n";
-        cout << " 4 | 5 | 6 \n";
-        cout << "---|---|---\n";
-        cout << " 7 | 8 | 9 \n";
-        *isStart = false;
-    } else {
-        printf("\n");
-        printf(" %c | %c | %c \n", board[0][0] ? board[0][0] : ' ', board[0][1] ? board[0][1] : ' ', board[0][2] ? board[0][2] : ' ');
-        printf("---|---|---\n");
-        printf(" %c | %c | %c \n", board[1][0] ? board[1][0] : ' ', board[1][1] ? board[1][1] : ' ', board[1][2] ? board[1][2] : ' ');
-        printf("---|---|---\n");
-        printf(" %c | %c | %c \n", board[2][0] ? board[2][0] : ' ', board[2][1] ? board[2][1] : ' ', board[2][2] ? board[2][2] : ' ');
-    }
-    cout << "\n";
+void printBoard(char board[3][3]) {
+    printf("\n %c | %c | %c \n", board[0][0] ? board[0][0] : ' ', board[0][1] ? board[0][1] : ' ', board[0][2] ? board[0][2] : ' ');
+    printf("---|---|---\n");
+    printf(" %c | %c | %c \n", board[1][0] ? board[1][0] : ' ', board[1][1] ? board[1][1] : ' ', board[1][2] ? board[1][2] : ' ');
+    printf("---|---|---\n");
+    printf(" %c | %c | %c \n\n", board[2][0] ? board[2][0] : ' ', board[2][1] ? board[2][1] : ' ', board[2][2] ? board[2][2] : ' ');
 }
 
 bool allSquaresFilled(char board[3][3]) {
@@ -66,9 +55,15 @@ bool allSquaresFilled(char board[3][3]) {
 int main() {
     cout << "Tic Tac Toe\n";
     cout << "===========\n\n";
-    
-    bool isStart = true;
+
+    cout << " 1 | 2 | 3 \n";
+    cout << "---|---|---\n";
+    cout << " 4 | 5 | 6 \n";
+    cout << "---|---|---\n";
+    cout << " 7 | 8 | 9 \n\n";
+ 
     bool isXNext = true;
+    bool isStart = true;
     char winner = '\0';
     int squareNumber;
     int coords[2];
@@ -80,7 +75,11 @@ int main() {
 
     while (!checkWinner(board, &winner) && !allSquaresFilled(board)) {
         bool updateStatus = false;
-        printBoard(board, &isStart);
+        if (!isStart) {
+            printBoard(board);
+        } else {
+            isStart = false;
+        }
         isXNext ? cout << "X's turn (enter square number): " : cout << "O's turn (enter square number): ";
         cin >> squareNumber;
         switch (squareNumber) {
@@ -138,7 +137,7 @@ int main() {
         }
     }
 
-    printBoard(board, &isStart);
+    printBoard(board);
 
     winner ? printf("Winner: %c\n", winner) : printf("It's a draw\n");
 
