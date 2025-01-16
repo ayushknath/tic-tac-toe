@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cstdio>
 #include <vector>
+#include <string>
 using namespace std;
 
 struct Move {
@@ -91,69 +92,92 @@ bool allSquaresFilled(char board[3][3]) {
     return true;
 }
 
-int main() {
-    cout << "Tic Tac Toe\n";
-    cout << "===========\n\n";
-
-    cout << " 1 | 2 | 3 \n";
-    cout << "---|---|---\n";
-    cout << " 4 | 5 | 6 \n";
-    cout << "---|---|---\n";
-    cout << " 7 | 8 | 9 \n\n";
- 
-    bool isXNext = true;
-    bool isStart = true;
-    char winner = '\0';
-    int cellNumber;
-    char board[3][3] = {
-        {'\0', '\0', '\0'},
-        {'\0', '\0', '\0'},
-        {'\0', '\0', '\0'}
-    };
-
-    vector<Move> moveTracker = {
-        {'X', {}},
-        {'O', {}}
-    };
-
-    while (!checkWinner(board, &winner) && !allSquaresFilled(board)) {
-        bool updateStatus = false;
-        vector<int> coords;
-
-        if (!isStart) {
-            printBoard(board);
-        } else {
-            isStart = false;
-        }
-
-        isXNext ? cout << "X's turn (enter cell number): " : cout << "O's turn (enter cell number): ";
-        cin >> cellNumber;
-
-        if (cellNumber > 9 || cellNumber < 1) {
-            cout << "Invalid cell number! Please try again\n";
-            continue;
-        }
-
-        coords = cellMapper(cellNumber);
-
-        updateStatus = updateBoard(board, isXNext, coords);
-        
-        if (updateStatus) {
-            if (isXNext) {
-                moveTracker.at(0).cells.push_back(cellNumber);
-                isXNext = false;
-            } else {
-                moveTracker.at(1).cells.push_back(cellNumber);
-                isXNext = true;
-            }
+bool repeatGame() {
+    string playAgain = "";
+    int maxTries = 3;
+    int trial = 1;
+    while (playAgain == "" && trial <= maxTries) {
+        cout << "\nWould you like to play again? [y/n]: ";
+        cin >> playAgain;
+        trial++;
+        if (playAgain == "y")
+            return true;
+        else if (playAgain == "n")
+            return false;
+        else {
+            cout << "Invalid choice!\n";
+            playAgain = "";
         }
     }
+    cout << "Exiting game...\n";
+    return false;
+}
 
-    printBoard(board);
+int main() {
+    do {
+        cout << "\nTic Tac Toe\n";
+        cout << "===========\n\n";
 
-    winner ? printf("Winner: %c\n", winner) : printf("It's a draw\n");
+        cout << " 1 | 2 | 3 \n";
+        cout << "---|---|---\n";
+        cout << " 4 | 5 | 6 \n";
+        cout << "---|---|---\n";
+        cout << " 7 | 8 | 9 \n\n";
+ 
+        bool isXNext = true;
+        bool isStart = true;
+        char winner = '\0';
+        int cellNumber;
+        char board[3][3] = {
+            {'\0', '\0', '\0'},
+            {'\0', '\0', '\0'},
+            {'\0', '\0', '\0'}
+        };
 
-    printStatistics(moveTracker);
+        vector<Move> moveTracker = {
+            {'X', {}},
+            {'O', {}}
+        };
+
+        while (!checkWinner(board, &winner) && !allSquaresFilled(board)) {
+            bool updateStatus = false;
+            vector<int> coords;
+
+            if (!isStart) {
+                printBoard(board);
+            } else {
+                isStart = false;
+            }
+
+            isXNext ? cout << "X's turn (enter cell number): " : cout << "O's turn (enter cell number): ";
+            cin >> cellNumber;
+
+            if (cellNumber > 9 || cellNumber < 1) {
+                cout << "Invalid cell number! Please try again\n";
+                continue;
+            }
+
+            coords = cellMapper(cellNumber);
+
+            updateStatus = updateBoard(board, isXNext, coords);
+        
+            if (updateStatus) {
+                if (isXNext) {
+                    moveTracker.at(0).cells.push_back(cellNumber);
+                    isXNext = false;
+                } else {
+                    moveTracker.at(1).cells.push_back(cellNumber);
+                    isXNext = true;
+                }
+            }
+        }
+
+        printBoard(board);
+
+        winner ? printf("Winner: %c\n", winner) : printf("It's a draw\n");
+
+        printStatistics(moveTracker);
+    } while (repeatGame());
 
     return 0;
 }
