@@ -36,7 +36,7 @@ g++ main.cpp -o play
 
     - #### Windows
     ```powershell
-    ./play.exe
+    .\play.exe
     ```
 
     - #### MacOS
