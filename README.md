@@ -10,18 +10,18 @@ git clone https://github.com/ayushknath/tic-tac-toe.git
 ```
 
 2. Install `g++` compiler (if you don't have it already)
-- #### Linux
-```bash
-sudo apt install g++
-```
+    - #### Linux
+    ```bash
+    sudo apt install g++
+    ```
 
-- #### Windows
-You can visit [msys2](https://www.msys2.org/) website to get MinGW toolkit. Just download the `.exe` file and follow the instructions on their website.
+    - #### Windows
+    You can visit [msys2](https://www.msys2.org/) website to get MinGW toolkit. Just download the `.exe` file and follow the instructions on their website.
 
-- #### MacOS
-I don't know man 😓. I've never used Mac, although you can google the steps to install `g++` for MacOS.
+    - #### MacOS
+    I don't know man 😓. I've never used Mac, although you can google the steps to install `g++` for MacOS.
 
-3. Build the executable from the source
+3. Build the executable from source
 
 ```bash
 g++ main.cpp -o play
@@ -29,18 +29,18 @@ g++ main.cpp -o play
 
 4. Execute the game
 
-- #### Linux
-```bash
-./play
-```
+    - #### Linux
+    ```bash
+    ./play
+    ```
 
-- #### Windows
-```powershell
-./play.exe
-```
+    - #### Windows
+    ```powershell
+    ./play.exe
+    ```
 
-- #### MacOS
-Please google the process 🙏. Although executing the game should be similar to that of Linux
-```bash
-./play
-```
+    - #### MacOS
+    Please google the process 🙏. Although executing the game should be similar to that of Linux
+    ```bash
+    ./play
+    ```
