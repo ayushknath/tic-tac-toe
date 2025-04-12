@@ -19,7 +19,7 @@ git clone https://github.com/ayushknath/tic-tac-toe.git
     You can visit [msys2](https://www.msys2.org/) website to get MinGW toolkit. Just download the `.exe` file and follow the instructions on their website.
 
     - #### MacOS
-    I don't know man 😓. I've never used Mac, although you can google the steps to install `g++` for MacOS.
+    Please google the steps to install `g++` for MacOS.
 
 3. Build the executable from source
 
@@ -40,7 +40,7 @@ g++ main.cpp -o play
     ```
 
     - #### MacOS
-    Please google the process 🙏. Although executing the game should be similar to that of Linux
+    Executing the game should be similar to that of Linux
     ```bash
     ./play
     ```
