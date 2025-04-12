@@ -2,182 +2,87 @@
 #include <cstdio>
 #include <vector>
 #include <string>
-using namespace std;
+#include <sstream>
+#include "board.h"
+#include "gameplay.h"
 
-struct Move {
-    char player;
-    vector<int> cells;
-};
+int main()
+{
+    Board b;
+    Gameplay gp;
+    char repeatGame;
+    bool firstGame = true;
 
-vector<int> cellMapper(int cellNumber) {
-    int cellMap[9][2] = {
-        {0,0}, {0,1}, {0,2},
-        {1,0}, {1,1}, {1,2},
-        {2,0}, {2,1}, {2,2}
-    };
-    vector<int> mappedCoords = {
-        *cellMap[cellNumber-1],
-        *(cellMap[cellNumber-1] + 1)
-    };
-    return mappedCoords;
-}
-
-bool checkWinner(char board[3][3], char* winner) {
-    int winCoords[8][3][2] = {
-        {{0,0}, {1,1}, {2,2}},
-        {{0,2}, {1,1}, {2,0}},
-        {{0,0}, {0,1}, {0,2}},
-        {{1,0}, {1,1}, {1,2}},
-        {{2,0}, {2,1}, {2,2}},
-        {{0,0}, {1,0}, {2,0}},
-        {{0,1}, {1,1}, {2,1}},
-        {{0,2}, {1,2}, {2,2}}
-    };
-    for (int i = 0; i < 8; i++) {
-        if (board[winCoords[i][0][0]][winCoords[i][0][1]] == board[winCoords[i][1][0]][winCoords[i][1][1]] && board[winCoords[i][1][0]][winCoords[i][1][1]] == board[winCoords[i][2][0]][winCoords[i][2][1]] && board[winCoords[i][0][0]][winCoords[i][0][1]] != '\0') {
-            *winner = board[winCoords[i][0][0]][winCoords[i][0][1]];
-            return true;
-        }
-    }
-    return false; 
-}
-
-bool updateBoard(char board[3][3], bool isXNext, vector<int> coords) {
-    if (board[coords.at(0)][coords.at(1)]) {
-        cout << "This cell is already filled!\n";
-        return false;
-    }
-    (isXNext) ?
-        board[coords.at(0)][coords.at(1)] = 'X' :
-        board[coords.at(0)][coords.at(1)] = 'O';
-
-    return true;
-}
-
-void printBoard(char board[3][3]) {
-    printf("\n %c | %c | %c \n", board[0][0] ? board[0][0] : ' ', board[0][1] ? board[0][1] : ' ', board[0][2] ? board[0][2] : ' ');
+    printf("\nTic Tac Toe\n");
+    printf("===========\n\n");
+    printf(" 1 | 2 | 3 \n");
     printf("---|---|---\n");
-    printf(" %c | %c | %c \n", board[1][0] ? board[1][0] : ' ', board[1][1] ? board[1][1] : ' ', board[1][2] ? board[1][2] : ' ');
+    printf(" 4 | 5 | 6 \n");
     printf("---|---|---\n");
-    printf(" %c | %c | %c \n\n", board[2][0] ? board[2][0] : ' ', board[2][1] ? board[2][1] : ' ', board[2][2] ? board[2][2] : ' ');
-}
+    printf(" 7 | 8 | 9 \n\n");
 
-void printStatistics(vector<Move> moves) {
-    printf("\nPlayer | %-30s\n", "Moves");
-    for (int i = 1; i<= 39; i++) {
-        printf("=");
-    }
-    printf("\n%-6c | ", moves.at(0).player);
-    for (int m : moves.at(0).cells) {
-        printf(" %d ", m);
-    }
-    printf("\n");
-    for (int i = 1; i <= 39; i++) {
-        printf("-");
-    }
-    printf("\n%-6c | ", moves.at(1).player);
-    for (int m : moves.at(1).cells) {
-        printf(" %d ", m);
-    }
-    printf("\n");
-}
-
-bool allSquaresFilled(char board[3][3]) {
-    for (int row = 0; row < 3; row++) {
-        for (int cell = 0; cell < 3; cell++) {
-            if (board[row][cell] == '\0')
-                return false;
+    while (firstGame || repeatGame == 'y')
+    {
+        if (firstGame)
+            firstGame = false;
+        else
+        {
+            b.resetBoard();
+            gp.resetMoves();
+            std::cin.ignore();
         }
-    }
-    return true;
-}
 
-bool repeatGame() {
-    string playAgain = "";
-    int maxTries = 3;
-    int trial = 1;
-    while (playAgain == "" && trial <= maxTries) {
-        cout << "\nWould you like to play again? [y/n]: ";
-        cin >> playAgain;
-        trial++;
-        if (playAgain == "y")
-            return true;
-        else if (playAgain == "n")
-            return false;
-        else {
-            cout << "Invalid choice!\n";
-            playAgain = "";
-        }
-    }
-    cout << "Exiting game...\n";
-    return false;
-}
-
-int main() {
-    do {
-        cout << "\nTic Tac Toe\n";
-        cout << "===========\n\n";
-
-        cout << " 1 | 2 | 3 \n";
-        cout << "---|---|---\n";
-        cout << " 4 | 5 | 6 \n";
-        cout << "---|---|---\n";
-        cout << " 7 | 8 | 9 \n\n";
- 
-        bool isXNext = true;
-        bool isStart = true;
-        char winner = '\0';
         int cellNumber;
-        char board[3][3] = {
-            {'\0', '\0', '\0'},
-            {'\0', '\0', '\0'},
-            {'\0', '\0', '\0'}
-        };
+        bool isXNext = true;
+        std::string winner = "";
 
-        vector<Move> moveTracker = {
-            {'X', {}},
-            {'O', {}}
-        };
+        while (!gp.victory(b.getBoard(), winner) && !b.allSquaresFilled())
+        {
+            if (isXNext)
+                printf("X's turn (enter cell number): ");
+            else
+                printf("O's turn (enter cell number): ");
 
-        while (!checkWinner(board, &winner) && !allSquaresFilled(board)) {
-            bool updateStatus = false;
-            vector<int> coords;
-
-            if (!isStart) {
-                printBoard(board);
-            } else {
-                isStart = false;
-            }
-
-            isXNext ? cout << "X's turn (enter cell number): " : cout << "O's turn (enter cell number): ";
-            cin >> cellNumber;
-
-            if (cellNumber > 9 || cellNumber < 1) {
-                cout << "Invalid cell number! Please try again\n";
+            std::string input;
+            std::getline(std::cin, input);
+            std::stringstream ss(input);
+            ss >> cellNumber;
+            if (ss.fail() || (cellNumber > 9 || cellNumber < 1))
+            {
+                printf("Invalid cell number! Please try again\n");
                 continue;
             }
 
-            coords = cellMapper(cellNumber);
+            bool isUpdated = b.updateBoard(isXNext, cellNumber);
 
-            updateStatus = updateBoard(board, isXNext, coords);
-        
-            if (updateStatus) {
-                if (isXNext) {
-                    moveTracker.at(0).cells.push_back(cellNumber);
+            if (isUpdated)
+            {
+                b.printBoard();
+
+                if (isXNext)
+                {
+                    gp.updateMoves(isXNext, cellNumber);
                     isXNext = false;
-                } else {
-                    moveTracker.at(1).cells.push_back(cellNumber);
+                }
+                else
+                {
+                    gp.updateMoves(isXNext, cellNumber);
                     isXNext = true;
                 }
             }
         }
 
-        printBoard(board);
+        if (winner != "")
+            printf("Winner: %s\n", winner.c_str());
+        else
+            printf("It\'s a draw\n");
 
-        winner ? printf("Winner: %c\n", winner) : printf("It's a draw\n");
+        gp.printStatistics();
 
-        printStatistics(moveTracker);
-    } while (repeatGame());
+        printf("Would you like to play again? [y/n]: ");
+        std::cin >> repeatGame;
+        printf("\n");
+    }
 
     return 0;
 }
