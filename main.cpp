@@ -3,8 +3,8 @@
 #include <vector>
 #include <string>
 #include <sstream>
-#include "board.h"
-#include "gameplay.h"
+#include "headers/board.h"
+#include "headers/gameplay.h"
 
 int main()
 {
